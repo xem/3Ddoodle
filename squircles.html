@@ -1,0 +1,90 @@
+<!doctype html>
+<title>CSS3D squircles sculpting</title>
+<meta charset=utf-8>
+<a href=//github.com/xem/3Ddoodle><img style="position:absolute;top:0;right:0;border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<style>
+body {
+  text-align: center;
+  overflow: hidden;
+}
+#b {
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px;
+  width: 0;
+  margin: 50px auto;
+  position: relative;
+  left: -100px;
+}
+.a, .n {
+  position: absolute;
+  top: 0;
+  -webkit-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.n {
+  width: 200px;
+  height: 200px;
+  border: 1px dashed red;
+}
+.d{
+  opacity: .5;
+  animation: shake 5s infinite;
+}
+p{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+@-moz-keyframes shake {
+	50% { transform: scale(1.05) }
+}
+@-webkit-keyframes shake {
+	50% { transform: scale(1.05) }
+}
+@keyframes shake {
+	50% { transform: scale(1.05) }
+}
+</style>
+
+
+<div id=b>
+  <div class=a></div>
+  <div class=n></div>
+</div>
+
+<p>
+rotate
+<br>
+x: <input type=range id=anglex min=-360 max=360 value=0>
+y: <input type=range id=angley min=-360 max=360 value=0>
+z: <input type=range id=anglez min=-360 max=360 value=0>
+<br>
+<br>
+Translate
+<br>
+x: <input type=range id=translatex min=-1000 max=1000 value=0>
+y: <input type=range id=translatey min=-1000 max=1000 value=0>
+z: <input type=range id=translatez min=-1000 max=1000 value=0>
+<br>
+<br>
+<button id=c>add layer</button>
+</p>
+
+<script>
+translatex.value=translatey.value=translatez.value=anglex.value=angley.value=anglez.value=0;
+onload=oninput=onchange=function(){
+  all=document.querySelector(".a");
+  all.style.transform=all.style.webkitTransform="translateX("+translatex.value+"px) translateY("+translatey.value+"px) translateZ("+translatez.value+"px) rotateX("+anglex.value+"deg) rotateY("+angley.value+"deg) rotateZ("+anglez.value+"deg)";
+}
+
+c.onclick=function(){
+  size = 200;
+  all=document.querySelector(".a");
+  all.outerHTML="<div class=a><div class=d style='border-radius:"+(Math.random()*100)+"px;background:hsl("+(Math.random()*360)+",50%,50%);width:"+size+"px;height:"+size+"px'></div>"+all.outerHTML+"</div>";
+  translatex.value=translatey.value=translatez.value=anglex.value=angley.value=anglez.value=0;
+}
+</script>
