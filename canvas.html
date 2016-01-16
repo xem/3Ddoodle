@@ -1,0 +1,124 @@
+<!doctype html>
+<title>CSS & canvas 3D doodling</title>
+<meta charset=utf-8>
+<a href=//github.com/xem/3Ddoodle><img style="position:absolute;top:0;right:0;border:0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<style>
+body {
+  text-align: center;
+  overflow: hidden;
+  margin: 0;
+}
+#b {
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px;
+  width: 0;
+  margin: 50px auto;
+  position: relative;
+  left: -150px;
+}
+.a, .n {
+  position: absolute;
+  top: 0;
+  -webkit-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.n {
+  opacity: 0.9;
+  border: 2px dashed #faa;
+}
+.d{
+  opacity: .5;
+}
+p{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+</style>
+
+
+<div id=b>
+  <div class=a></div>
+  <canvas class=n id=v></canvas>
+</div>
+
+<p>
+rotate
+<br>
+x: <input type=range id=anglex min=-360 max=360 value=0>
+y: <input type=range id=angley min=-360 max=360 value=0>
+z: <input type=range id=anglez min=-360 max=360 value=0>
+<br>
+<br>
+Translate
+<br>
+x: <input type=range id=translatex min=-1000 max=1000 value=0>
+y: <input type=range id=translatey min=-1000 max=1000 value=0>
+z: <input type=range id=translatez min=-1000 max=1000 value=0>
+<br>
+<br>
+<button id=c>fix</button>
+</p>
+
+<script>
+
+function getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect();
+  return [evt.clientX - rect.left, evt.clientY - rect.top];
+}
+
+function drawShape(canvas, ctx, shape, evt){
+  canvas.width = canvas.width;
+  if(shape[0]) ctx.moveTo(shape[0][0],shape[0][1]);
+  for(i = 0; i < shape.length; i++){
+    if(shape[i] == null){
+      if(shape[i+1]){
+        ctx.moveTo(shape[i+1][0],shape[i+1][1]);
+      }
+    }
+    else {
+      ctx.lineTo(shape[i][0],shape[i][1]);
+    }
+  }
+  ctx.stroke();
+}
+
+translatex.value=translatey.value=translatez.value=anglex.value=angley.value=anglez.value=0;
+onload=oninput=onchange=function(){
+  all=document.querySelector(".a");
+  all.style.transform=all.style.webkitTransform="translateX("+translatex.value+"px) translateY("+translatey.value+"px) translateZ("+translatez.value+"px) rotateX("+anglex.value+"deg) rotateY("+angley.value+"deg) rotateZ("+anglez.value+"deg)";
+}
+
+c.onclick=function(){
+  img = v.toDataURL();
+  v.width = v.width;
+  dots=[];
+  all=document.querySelector(".a");
+  all.outerHTML="<div class=a><img src='"+img+"'>"+all.outerHTML+"</div>";
+  translatex.value=translatey.value=translatez.value=anglex.value=angley.value=anglez.value=0;
+}
+
+x = v.getContext("2d");
+dots = [];
+down = false;
+v.onmousedown = function(e){
+  down = true;
+  dots.push(getMousePos(v,e));
+  drawShape(v,x,dots,e);
+}
+v.onmousemove = function(e){
+  if(down == true){
+    dots.push(getMousePos(v,e));
+    drawShape(v,x,dots,e);
+  }
+}
+v.onmouseup = function(e){
+  dots.push(null);
+  down = false;
+}
+
+</script>
